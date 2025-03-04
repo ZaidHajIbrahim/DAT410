@@ -48,7 +48,9 @@ class MCTS:
                 return
 
         action = self._untried_moves.pop()
-
+        
+        self.state["board"][action[0]][action[1]] = self.player
+        new_state = self.state["board"][action[0]][action[1]]
         next_state = self.state.move(action)
         child_node = MCTS(
 		    next_state, parent=self, parent_action=action)
