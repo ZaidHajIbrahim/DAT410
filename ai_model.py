@@ -1,7 +1,7 @@
 import numpy as np
 from collections import defaultdict
 import math
-
+import game
 
 class MCTS:
     def __init__(self,state, parent=None, player = 'O'):
@@ -11,8 +11,14 @@ class MCTS:
         self.visits = 0
         self.reward = 0
         self.player = player
-        self.untried_actions = self.state.get_possible_actions()
+        self.untried_moves = self.state.get_possible_moves()
     
+    def get_possible_moves(self):
+        for x,row in enumerate(self.state):
+            for y, _ in enumerate(row):
+                if self.state[x][y] == game.game_class['empty']:
+                    self.untried_moves.append((x,y))
+
     def is_fully_expanded(self):
         return len(self._untried_actions) == 0
     
