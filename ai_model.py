@@ -11,6 +11,7 @@ class MCTS:
         self.visits = 0
         self.reward = 0
         self.player = player
+        self.game_over = False
         self.untried_moves = self.state.get_possible_moves()
     
     def get_possible_moves(self):
@@ -28,7 +29,8 @@ class MCTS:
     def uct_value(self, exploration_weight):
         if self.visits == 0:
             return math.inf
-        return self.reward / self.visits + exploration_weight * math.sqrt(
+        else:
+            return self.reward / self.visits + exploration_weight * math.sqrt(
                 math.log(self.parent.visits) / self.visits)
     
     def select(self):
@@ -41,11 +43,19 @@ class MCTS:
         return current
     
     def expand(self):
-	
-    action = self._untried_actions.pop()
-    next_state = self.state.move(action)
-    child_node = MonteCarloTreeSearchNode(
-		next_state, parent=self, parent_action=action)
+        if len(self.untried_moves) != 0:
+            if self.game_over:
+                return
 
-    self.children.append(child_node)
-    return child_node 
+        action = self._untried_moves.pop()
+
+        next_state = self.state.move(action)
+        child_node = MCTS(
+		    next_state, parent=self, parent_action=action)
+
+        self.children.append(child_node)
+        
+        return child_node 
+    
+    def move(self):
+       return 0
